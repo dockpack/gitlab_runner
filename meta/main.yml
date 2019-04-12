@@ -26,11 +26,6 @@ galaxy_info:
         - buster
         - stretch
         - jessie
-    - name: Mint
-      version:
-        - sonya
-        - serena
-        - sarah
   galaxy_tags:
     - system
     - development
