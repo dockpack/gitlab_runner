@@ -1,0 +1,33 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: docker
+verifier:
+  name: goss
+  lint:
+    name: yamllint
+platforms:
+  - name: gitlab-runner-centos7
+    image: milcom/centos7-systemd
+    privileged: true
+  - name: gitlab-runner-centos6
+    image: centos:6
+    privileged: true
+  - name: gitlab-runner-ubuntu
+    image: ubuntu:xenial
+    privileged: True
+  - name: gitlab-runner-debian
+    image: debian:buster
+    privileged: True
+provisioner:
+  name: ansible
+  config_options:
+    defaults:
+      remote_tmp: /tmp
+  playbooks:
+    converge: playbook.yml
+  lint:
+    name: ansible-lint
+scenario:
+  name: default

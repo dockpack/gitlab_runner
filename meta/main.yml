@@ -1,0 +1,39 @@
+---
+
+galaxy_info:
+  author: bbaassssiiee
+  description: Gitlab Runner
+  company:
+
+  license: MIT
+
+  min_ansible_version: 2.6.0
+
+  platforms:
+    - name: EL
+      versions:
+        - 6
+        - 7
+    - name: Fedora
+      versions:
+        - 29
+    - name: Ubuntu
+      versions:
+        - xenial
+        - bionic
+    - name: Debian
+      versions:
+        - buster
+        - stretch
+        - jessie
+    - name: Mint
+      version:
+        - sonya
+        - serena
+        - sarah
+  galaxy_tags:
+    - system
+    - development
+    - buildserver
+
+dependencies: []

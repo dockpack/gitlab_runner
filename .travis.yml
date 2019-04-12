@@ -1,0 +1,28 @@
+---
+sudo: required
+language: python
+services:
+  - docker
+
+before_install:
+  - sudo apt-get -qq update
+
+  # stop unneeded services to free up build VM resources
+  - sudo service cassandra stop
+  - sudo service memcached stop
+  - sudo service mysql stop
+  - sudo service neo4j stop
+  - sudo service postgresql stop
+  - sudo service rabbitmq-server stop
+  - sudo service redis-server stop
+  - sudo service riak stop
+
+install:
+  - pip install tox-travis
+  - pip install -r requirements.txt
+
+script:
+  - tox
+
+notifications:
+  webhooks: https://galaxy.ansible.com/api/v1/notifications/

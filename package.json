@@ -1,0 +1,10 @@
+{
+  "name": "dockpack.gitlab_runner",
+  "version": "0.0.1",
+  "scripts": {
+    "release": "release-it"
+  },
+  "devDependencies": {
+    "release-it": "^7.6.1"
+  }
+}

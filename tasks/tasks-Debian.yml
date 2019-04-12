@@ -1,0 +1,19 @@
+---
+
+- name: Download repo installer
+  get_url:
+    url: https://packages.gitlab.com/install/repositories/runner/gitlab-runner/script.deb.sh
+    dest: /usr/local/bin/script.deb.sh
+    owner: root
+    mode: 0700
+
+- name: Run repo installer
+  command: /usr/local/bin/script.deb.sh
+  args:
+    creates: /etc/apt/sources.list.d/runner_gitlab-runner.list
+
+- name: Remove the repo installer
+  file:
+    path: /usr/local/bin/script.deb.sh
+    state: absent
+  when: gitlab_runner_state == 'absent'

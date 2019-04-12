@@ -1,0 +1,19 @@
+---
+- name: run RedHat specific tasks
+  include: tasks-RedHat.yml
+  when: ansible_os_family == 'RedHat'
+  tags:
+    - gitlab_runner
+    - redhat
+
+- name: run Debian specific tasks
+  include: tasks-Debian.yml
+  when: ansible_os_family == 'Debian'
+  tags:
+    - gitlab_runner
+    - debian
+
+- name: Install gitlab-runner
+  package:
+    name: gitlab-runner
+    state: "{{ gitlab_runner_state }}"
