@@ -6,6 +6,9 @@
     dest: /usr/local/bin/script.rpm.sh
     owner: root
     mode: 0700
+  register: download_repo
+  until: download_repo is succeeded
+  retries: 3
 
 - name: Run repo installer
   command: /usr/local/bin/script.rpm.sh
