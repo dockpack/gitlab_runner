@@ -17,3 +17,8 @@
   package:
     name: gitlab-runner
     state: "{{ gitlab_runner_state }}"
+
+- name: copy goss test template
+  template:
+    src: test_gitlabrunner.yml
+    dest: /root/test_gitlabrunner.yml

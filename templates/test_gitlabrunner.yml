@@ -1,0 +1,5 @@
+---
+# Molecule managed
+package:
+  gitlab-runner:
+    installed: true
