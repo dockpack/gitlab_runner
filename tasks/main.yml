@@ -17,6 +17,8 @@
   package:
     name: gitlab-runner
     state: "{{ gitlab_runner_state }}"
+  register: install_gitlab_runner
+  until: install_gitlab_runner is succeeded
 
 - name: copy goss test template
   template:
