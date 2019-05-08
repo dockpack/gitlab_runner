@@ -12,6 +12,10 @@
 
 - name: Run repo installer
   command: /usr/local/bin/script.rpm.sh
+  register: network_access
+  until: network_access is success
+  retries: 10
+  delay: 2
   args:
     creates: /etc/yum.repos.d/runner_gitlab-runner.repo
 
