@@ -40,6 +40,7 @@
     - register_runner
 
 - name: copy certificate for root
+  when: gitlab_host is defined
   copy:
     src: "certs/{{ gitlab_host }}.crt"
     dest: "/etc/gitlab-runner/certs/"
@@ -58,6 +59,7 @@
     - register_runner
 
 - name: copy certificate for gitlab-runner
+  when: gitlab_host is defined
   copy:
     src: "certs/{{ gitlab_host }}.crt"
     dest: "/home/gitlab-runner/.gitlab-runner/certs/"
@@ -89,6 +91,7 @@
   tags:
     - gitlab_runner
     - register_runner
+    - skip_register
 
 - name: register shell runner
   when: configured_runners.stderr.find('\nshell-runner') == -1
@@ -103,6 +106,7 @@
   tags:
     - gitlab_runner
     - register_runner
+    - skip_register
 
 - name: copy goss test template
   template:
