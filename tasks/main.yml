@@ -1,13 +1,4 @@
 ---
-- name: set
-  set_fact:
-    json_key: "{{ lookup('env','JSON_KEY') }}"
-
-- name: set default
-  when: json_key|length == 0
-  set_fact:
-    default_image: 'gcc:5.5.0'
-
 
 - name: run RedHat specific tasks
   include: tasks-RedHat.yml
