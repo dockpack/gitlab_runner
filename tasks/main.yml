@@ -6,7 +6,7 @@
 - name: set default
   when: json_key|length == 0
   set_fact:
-    default_image: 'gcr.io/vola-1/centos6-dts7-gcc7-jdk8-boost167'
+    default_image: 'gcc:5.5.0'
 
 
 - name: run RedHat specific tasks
