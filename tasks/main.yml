@@ -1,4 +1,5 @@
 ---
+
 - name: run RedHat specific tasks
   include: tasks-RedHat.yml
   when: ansible_os_family == 'RedHat'
@@ -19,8 +20,97 @@
     state: "{{ gitlab_runner_state }}"
   register: install_gitlab_runner
   until: install_gitlab_runner is succeeded
+  tags:
+    - gitlab_runner
+
+- name: Set concurrent option
+  lineinfile:
+    dest: /etc/gitlab-runner/config.toml
+    regexp: ^concurrent =
+    line: concurrent = {{ ansible_processor_cores }}
+    state: present
+
+- name: ensure directory for root
+  file:
+    path: /etc/gitlab-runner/certs/
+    state: directory
+    owner: root
+  tags:
+    - gitlab_runner
+    - register_runner
+
+- name: copy certificate for root
+  when: gitlab_host is defined
+  copy:
+    src: "certs/{{ gitlab_host }}.crt"
+    dest: "/etc/gitlab-runner/certs/"
+    owner: root
+  tags:
+    - gitlab_runner
+    - register_runner
+
+- name: ensure directory for gitlab-runner
+  file:
+    path: /home/gitlab-runner/.gitlab-runner/certs
+    state: directory
+    owner: gitlab-runner
+  tags:
+    - gitlab_runner
+    - register_runner
+
+- name: copy certificate for gitlab-runner
+  when: gitlab_host is defined
+  copy:
+    src: "certs/{{ gitlab_host }}.crt"
+    dest: "/home/gitlab-runner/.gitlab-runner/certs/"
+    owner: gitlab-runner
+  tags:
+    - gitlab_runner
+    - register_runner
+
+- name: List configured runners
+  command: gitlab-runner list
+  register: configured_runners
+  changed_when: False
+  tags:
+    - gitlab_runner
+    - register_runner
+
+- name: register docker runner
+  when: configured_runners.stderr.find('\ndocker-runner') == -1
+  command: |
+    gitlab-ci-multi-runner register \
+    --non-interactive \
+    --url "{{ gitlab_external_url }}" \
+    --registration-token "{{ gitlab_runner_token }}" \
+    --description "docker-runner" \
+    --executor "docker" \
+    --tag-list '{{ gitlab_runner_tags | join(",") }}' \
+    --docker-image "{{ gitlab_runner_image }}"
+  ignore_errors: true
+  tags:
+    - gitlab_runner
+    - register_runner
+    - skip_register
+
+- name: register shell runner
+  when: configured_runners.stderr.find('\nshell-runner') == -1
+  command: |
+    gitlab-ci-multi-runner register \
+    --non-interactive \
+    --url "{{ gitlab_external_url }}" \
+    --registration-token "{{ gitlab_runner_token }}" \
+    --description "shell-runner" \
+    --executor "shell"
+  ignore_errors: true
+  tags:
+    - gitlab_runner
+    - register_runner
+    - skip_register
 
 - name: copy goss test template
   template:
     src: test_gitlabrunner.yml
     dest: /root/test_gitlabrunner.yml
+  tags:
+    - gitlab_runner
