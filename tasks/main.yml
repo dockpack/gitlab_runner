@@ -85,6 +85,7 @@
     --registration-token "{{ gitlab_runner_token }}" \
     --description "docker-runner" \
     --executor "docker" \
+    --network_mode = "host" \
     --tag-list '{{ gitlab_runner_tags | join(",") }}' \
     --docker-image "{{ gitlab_runner_image }}"
   ignore_errors: true
