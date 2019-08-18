@@ -77,7 +77,7 @@
     - register_runner
 
 - name: register docker runner
-  when: configured_runners.stderr.find('\ndocker-runner') == -1
+  when: docker_runner|bool
   command: |
     gitlab-ci-multi-runner register \
     --non-interactive \
@@ -85,17 +85,20 @@
     --registration-token "{{ gitlab_runner_token }}" \
     --description "docker-runner" \
     --executor "docker" \
-    --network_mode = "host" \
+    --docker-network-mode="host" \
+    --docker-tlsverify=false \
+    --docker-privileged \
     --tag-list '{{ gitlab_runner_tags | join(",") }}' \
-    --docker-image "{{ gitlab_runner_image }}"
+    --docker-image='{{ gitlab_runner_image |default('alpine') }}'
   ignore_errors: true
   tags:
     - gitlab_runner
+    - docker_runner
     - register_runner
     - skip_register
 
 - name: register shell runner
-  when: configured_runners.stderr.find('\nshell-runner') == -1
+  when: shell_runner|bool
   command: |
     gitlab-ci-multi-runner register \
     --non-interactive \
@@ -106,6 +109,7 @@
   ignore_errors: true
   tags:
     - gitlab_runner
+    - shell_runner
     - register_runner
     - skip_register
 

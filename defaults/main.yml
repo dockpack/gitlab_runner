@@ -2,3 +2,5 @@
 # defaults file for gitlab_runner
 gitlab_runner_state: present
 gitlab_runner_image: gcc:5.5.0
+docker_runner: true
+shell_runner: false
