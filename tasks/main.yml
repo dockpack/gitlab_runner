@@ -76,6 +76,24 @@
     - gitlab_runner
     - register_runner
 
+- name: obtain registration token
+  when: gitlab_host is defined
+  delegate_to: "{{ gitlab_host }}"
+  command: 'gitlab-rails runner -e production "puts Gitlab::CurrentSettings.current_application_settings.runners_registration_token"'
+  register: runners_registration_token
+  changed_when: false
+  tags:
+    - gitlab_runner
+    - register_runner
+
+- name: set gitlab_runner_token
+  when: gitlab_host is defined and runners_registration_token.rc == 0
+  set_fact:
+    gitlab_runner_token: "{{ runners_registration_token.stdout }}"
+  tags:
+    - gitlab_runner
+    - register_runner
+
 - name: register docker runner
   when: docker_runner|bool
   command: |
