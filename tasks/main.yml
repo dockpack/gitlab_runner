@@ -95,7 +95,7 @@
     - register_runner
 
 - name: register docker runner
-  when: docker_runner|bool
+  when: gitlab_external_url is defined and docker_runner|bool
   command: |
     gitlab-ci-multi-runner register \
     --non-interactive \
@@ -116,7 +116,7 @@
     - skip_register
 
 - name: register shell runner
-  when: shell_runner|bool
+  when: gitlab_external_url is defined and shell_runner|bool
   command: |
     gitlab-ci-multi-runner register \
     --non-interactive \
