@@ -81,6 +81,7 @@
   delegate_to: "{{ gitlab_host }}"
   command: 'gitlab-rails runner -e production "puts Gitlab::CurrentSettings.current_application_settings.runners_registration_token"'
   register: runners_registration_token
+  no_log: true
   changed_when: false
   tags:
     - gitlab_runner
