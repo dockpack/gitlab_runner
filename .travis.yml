@@ -7,11 +7,6 @@ services:
 before_install:
   - sudo apt-get -qq update
 
-  # stop unneeded services to free up build VM resources
-  - sudo service mysql stop
-  - sudo service neo4j stop
-  - sudo service postgresql stop
-
 install:
   - pip install tox-travis
   - pip install -r requirements.txt
