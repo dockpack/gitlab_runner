@@ -107,7 +107,7 @@
     --docker-network-mode="host" \
     --docker-tlsverify=false \
     --docker-privileged \
-    --tag-list '{{ gitlab_runner_tags | join(",") }}' \
+    --tag-list "{{ ansible_distribution|lower }}{{ ansible_distribution_major_version }},docker" \
     --docker-image='{{ gitlab_runner_image |default('alpine') }}'
   ignore_errors: true
   tags:
@@ -124,6 +124,7 @@
     --url "{{ gitlab_external_url }}" \
     --registration-token "{{ gitlab_runner_token }}" \
     --description "shell-runner" \
+    --tag-list "{{ ansible_distribution|lower }}{{ ansible_distribution_major_version }},shell" \
     --executor "shell"
   ignore_errors: true
   tags:
