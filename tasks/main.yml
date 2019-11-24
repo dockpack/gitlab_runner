@@ -49,6 +49,17 @@
     - gitlab_runner
     - register_runner
 
+- name: add docker_users to docker group
+  user:
+    name: "{{ item }}"
+    groups: docker
+    append: true
+  when: docker_users is defined
+  with_items: "{{ docker_users }}"
+  ignore_errors: true
+  tags:
+    - gitlab_runner
+
 - name: ensure directory for gitlab-runner
   file:
     path: /home/gitlab-runner/.gitlab-runner/certs
