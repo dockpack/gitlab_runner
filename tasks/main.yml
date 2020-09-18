@@ -27,7 +27,7 @@
   lineinfile:
     dest: /etc/gitlab-runner/config.toml
     regexp: ^concurrent =
-    line: concurrent = {{ ansible_processor_cores }}
+    line: concurrent = {{ ansible_processor_cores|default(2, true) }}
     state: present
 
 - name: ensure directory for root
