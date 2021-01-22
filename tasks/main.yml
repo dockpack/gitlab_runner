@@ -1,5 +1,11 @@
 ---
 
+- name: install curl if needed
+  package:
+    name: curl
+    state: present
+    update_cache: true
+
 - name: run RedHat specific tasks
   include: tasks-RedHat.yml
   when: ansible_os_family == 'RedHat'
