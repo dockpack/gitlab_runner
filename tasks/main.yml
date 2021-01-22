@@ -87,7 +87,7 @@
 - name: List configured runners
   command: gitlab-runner list
   register: configured_runners
-  changed_when: False
+  changed_when: false
   tags:
     - gitlab_runner
     - register_runner
@@ -95,6 +95,7 @@
 - name: obtain registration token from gitlab in docker
   when: gitlab_host is defined
   delegate_to: "{{ gitlab_host }}"
+  # yamllint disable-line rule:line-length
   command: 'docker exec -t gitlab gitlab-rails runner -e production "puts Gitlab::CurrentSettings.current_application_settings.runners_registration_token"'
   register: runners_registration_token
   no_log: true
@@ -110,7 +111,7 @@
   tags:
     - gitlab_runner
     - register_runner
-
+# yamllint disable rule:line-length
 - name: register docker runner
   when: gitlab_external_url is defined and docker_runner|bool
   command: |

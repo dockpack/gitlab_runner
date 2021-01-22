@@ -2,6 +2,7 @@
 
 - name: Download repo installer
   get_url:
+    # yamllint disable-line rule:line-length
     url: https://packages.gitlab.com/install/repositories/runner/gitlab-runner/script.rpm.sh
     dest: /usr/local/bin/script.rpm.sh
     owner: root

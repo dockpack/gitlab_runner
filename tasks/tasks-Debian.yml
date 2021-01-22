@@ -2,6 +2,7 @@
 
 - name: Download repo installer
   get_url:
+    # yamllint disable-line rule:line-length
     url: https://packages.gitlab.com/install/repositories/runner/gitlab-runner/script.deb.sh
     dest: /usr/local/bin/script.deb.sh
     owner: root
