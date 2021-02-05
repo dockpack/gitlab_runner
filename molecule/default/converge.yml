@@ -2,6 +2,7 @@
 - name: Converge
   hosts: all
   become: true
-
+  vars:
+    gitlab_transport: 'http'
   roles:
     - role: gitlab_runner
