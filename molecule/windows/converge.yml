@@ -3,7 +3,7 @@
   hosts: all
   vars:
     gitlab_transport: http
-    gitlab_host: vagrant-gitlab
+    gitlab_host: 10.1.2.4
     gitlab_port: 8080
   roles:
     - role: gitlab_runner
