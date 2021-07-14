@@ -7,7 +7,7 @@ check_interval = 0
 [[runners]]
   name = "windows-runner"
   url = "{{ gitlab_external_url }}"
-  token = "CQEZQfywULzZVf5Af5Bc"
+  token = "{{ gitlab_runner_token }}"
   executor = "shell"
   [runners.custom_build_dir]
   [runners.cache]
