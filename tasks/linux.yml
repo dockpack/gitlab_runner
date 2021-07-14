@@ -1,19 +1,19 @@
 ---
 
-- name: install curl if needed
+- name: Install curl if needed
   package:
     name: curl
     state: present
     update_cache: true
 
-- name: run RedHat specific tasks
+- name: Run RedHat specific tasks
   include: tasks-RedHat.yml
   when: ansible_os_family == 'RedHat'
   tags:
     - gitlab_runner
     - redhat
 
-- name: run Debian specific tasks
+- name: Run Debian specific tasks
   include: tasks-Debian.yml
   when: ansible_os_family == 'Debian'
   tags:
@@ -37,7 +37,7 @@
     state: present
     mode: 0644
 
-- name: ensure directory for root
+- name: Ensure directory for root
   file:
     path: /etc/gitlab-runner/certs/
     state: directory
@@ -47,7 +47,7 @@
     - gitlab_runner
     - register_runner
 
-- name: copy certificate for root
+- name: Copy certificate for root
   when:
     - gitlab_host is defined
     - gitlab_transport == 'https'
@@ -60,7 +60,7 @@
     - gitlab_runner
     - register_runner
 
-- name: add docker_users to docker group
+- name: Add docker_users to docker group
   user:
     name: "{{ item }}"
     groups: docker
@@ -71,7 +71,7 @@
   tags:
     - gitlab_runner
 
-- name: ensure directory for gitlab-runner
+- name: Ensure directory for gitlab-runner
   file:
     path: /home/gitlab-runner/.gitlab-runner
     state: directory
@@ -81,7 +81,7 @@
     - gitlab_runner
     - register_runner
 
-- name: ensure directory for gitlab-runner
+- name: Ensure directory for gitlab-runner
   when: gitlab_transport == 'https'
   file:
     path: /home/gitlab-runner/.gitlab-runner/certs
@@ -92,7 +92,7 @@
     - gitlab_runner
     - register_runner
 
-- name: copy certificate for gitlab-runner
+- name: Copy certificate for gitlab-runner
   when:
     - gitlab_host is defined
     - gitlab_transport == 'https'
@@ -114,7 +114,7 @@
     - register_runner
 
 # yamllint disable rule:line-length
-- name: register docker runner
+- name: Register docker runner
   when: gitlab_external_url is defined and docker_runner|bool
   command: |
     gitlab-ci-multi-runner register \
@@ -135,7 +135,7 @@
     - register_runner
     - skip_register
 
-- name: register shell runner
+- name: Register shell runner
   when: gitlab_external_url is defined and shell_runner|bool
   command: |
     gitlab-ci-multi-runner register \
@@ -152,7 +152,7 @@
     - register_runner
     - skip_register
 
-- name: copy goss test template
+- name: Copy goss test template
   template:
     src: test_gitlabrunner.yml
     dest: /root/test_gitlabrunner.yml
