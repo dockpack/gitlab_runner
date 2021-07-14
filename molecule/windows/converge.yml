@@ -2,6 +2,8 @@
 - name: Converge
   hosts: all
   vars:
-    install_miniconda: true
+    gitlab_transport: http
+    gitlab_host: vagrant-gitlab
+    gitlab_port: 8080
   roles:
     - role: gitlab_runner
