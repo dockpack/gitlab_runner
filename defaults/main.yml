@@ -3,6 +3,7 @@
 gitlab_runner_state: present
 gitlab_runner_image: gcc:5.5.0
 gitlab_transport: 'https'
-gitlab_port: '8080'
+gitlab_port: '8443'
 docker_runner: true
 shell_runner: false
+
