@@ -9,7 +9,7 @@ lint: |
   yamllint .
   ansible-lint
 platforms:
-  - name: virtualbox-windows
+  - name: vagrant-windows
     box: jborean93/WindowsServer2016
     memory: 4069
     cpus: 2
@@ -19,7 +19,7 @@ provisioner:
   name: ansible
   inventory:
     host_vars:
-      virtualbox-windows:
+      vagrant-windows:
         ansible_user: vagrant
         ansible_password: vagrant
         ansible_port: 55986
@@ -27,5 +27,10 @@ provisioner:
         ansible_connection: winrm
         ansible_winrm_scheme: https
         ansible_winrm_server_cert_validation: ignore
+      vagrant-gitlab:
+        ansible_user: vagrant
+        ansible_password: vagrant
+        ansible_port: 22
+        ansible_connection: ssh
 verifier:
   name: ansible
