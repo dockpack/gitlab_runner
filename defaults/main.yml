@@ -6,4 +6,3 @@ gitlab_transport: 'https'
 gitlab_port: '8443'
 docker_runner: true
 shell_runner: false
-
