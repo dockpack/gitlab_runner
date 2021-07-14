@@ -3,6 +3,7 @@ tox
 sh==1.12.14
 molecule
 molecule-docker
+molecule-vagrant
 yamllint
 ansible-lint
 docker==4.2.2
