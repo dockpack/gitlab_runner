@@ -1,0 +1,6 @@
+---
+
+- name: restart runner service
+  win_service:
+    name: gitlab-runner
+    state: restarted

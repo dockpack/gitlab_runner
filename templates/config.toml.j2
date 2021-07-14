@@ -1,0 +1,18 @@
+concurrent =  {{ ansible_processor_cores|default(2, true) }}
+check_interval = 0
+
+[session_server]
+  session_timeout = 1800
+
+[[runners]]
+  name = "windows-runner"
+  url = "{{ gitlab_external_url }}"
+  token = "CQEZQfywULzZVf5Af5Bc"
+  executor = "shell"
+  [runners.custom_build_dir]
+  [runners.cache]
+    [runners.cache.s3]
+    [runners.cache.gcs]
+    [runners.cache.azure]
+  [runners.custom]
+    run_exec = ""
