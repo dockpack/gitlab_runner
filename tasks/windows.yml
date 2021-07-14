@@ -1,6 +1,6 @@
 ---
 
-- name: create required directories
+- name: Create required directories
   win_file:
     path: C:\{{ item }}
     state: directory
@@ -8,6 +8,8 @@
     - gitlab-runner
     - gitlab-runner\cache
     - gitlab-runner\build
+  tags:
+    - windows_runner
 
 - name: Get runner executable file
   win_get_url:
@@ -17,27 +19,56 @@
   register: runner_install
   check_mode: false
   ignore_errors: true  # ExitJson with 0 arguments
+  tags:
+    - windows_runner
 
 - name: Run runner install
   include_tasks: tasks-Windows.yml
   when: runner_install.changed
+  tags:
+    - windows_runner
 
 - name: Check if gitlab-runner service is installed
   win_service:
     name: gitlab-runner
   register: service_info
+  tags:
+    - windows_runner
 
 - name: Place runner config
   win_template:
     src: config.toml.j2
     dest: C:\gitlab-runner\config.toml
   notify: restart runner service
+  tags:
+    - windows_runner
+    - register_runner
 
-- name: install runner service
+- name: Install runner service
+  when: not service_info.exists
   win_command: gitlab-runner.exe install
   args:
     chdir: C:\gitlab-runner\
-  when: not service_info.exists
+  tags:
+    - register_runner
+    - windows_runner
 
 - name: Run all notified handlers now
   meta: flush_handlers
+  tags:
+    - windows_runner
+
+- name: Register runner
+  win_shell: |
+    C:\gitlab-runner\gitlab-runner.exe register --non-interactive `
+    --url {{ gitlab_external_url }} `
+    --registration-token {{ gitlab_runner_token }} `
+    --description "windows-runner" `
+    --tag-list "windows,win32,win64" `
+    --locked="false" `
+    --executor shell
+  args:
+    chdir: C:\gitlab-runner\
+  tags:
+    - register_runner
+    - windows_runner

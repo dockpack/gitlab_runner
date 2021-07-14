@@ -1,18 +1,22 @@
 ---
 
-- name: check for currently running runner service
+- name: Check for currently running runner service
   win_service:
     name: gitlab-runner
   register: service_info
+  tags:
+    - windows_runner
 
-- name: stop gitlab runner service if it is running
+- name: Stop gitlab runner service if it is running
   win_service:
     name: gitlab-runner
     state: stopped
   when: service_info.state is defined and service_info.state == "running"
   register: service_stop
+  tags:
+    - windows_runner
 
-- name: wait for the service to stop
+- name: Wait for the service to stop
   win_wait_for_process:
     process_name_exact: gitlab-runner
     state: absent
@@ -20,10 +24,13 @@
   when: service_stop.changed and not ansible_check_mode
   tags:
     - skip_ansible_lint
+    - windows_runner
 
-- name: copy new runner binary
+- name: Copy new runner binary
   win_copy:
     remote_src: true
     src: C:\gitlab-runner\gitlab-runner-staging.exe
     dest: C:\gitlab-runner\gitlab-runner.exe
   notify: restart runner service
+  tags:
+    - windows_runner
