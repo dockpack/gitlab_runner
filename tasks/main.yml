@@ -10,7 +10,9 @@
     gitlab_external_url: "{{ gitlab_transport }}://{{ gitlab_host }}:{{ gitlab_port }}/"
 
 - name: obtain registration token from gitlab in docker
-  when: gitlab_host is defined
+  when:
+    - gitlab_host is defined
+    - gitlab_runner_token is not defined
   delegate_to: "{{ gitlab_host }}"
   become: true
   # yamllint disable-line rule:line-length
