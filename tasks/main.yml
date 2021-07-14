@@ -1,5 +1,36 @@
 ---
 
+- name: interpolate gitlab_external_url
+  when:
+    - gitlab_transport is defined
+    - gitlab_host is defined
+    - gitlab_port is defined
+  set_fact:
+    # yamllint disable-line rule:line-length
+    gitlab_external_url: "{{ gitlab_transport }}://{{ gitlab_host }}:{{ gitlab_port }}/"
+
+- name: obtain registration token from gitlab in docker
+  when: gitlab_host is defined
+  delegate_to: "{{ gitlab_host }}"
+  become: true
+  # yamllint disable-line rule:line-length
+  command: 'docker exec -t gitlab gitlab-rails runner -e production "puts Gitlab::CurrentSettings.current_application_settings.runners_registration_token"'
+  register: runners_registration_token
+  changed_when: false
+  tags:
+    - gitlab_runner
+    - windows_runner
+    - register_runner
+
+- name: set gitlab_runner_token
+  when: gitlab_host is defined and runners_registration_token.rc == 0
+  set_fact:
+    gitlab_runner_token: "{{ runners_registration_token.stdout }}"
+  tags:
+    - gitlab_runner
+    - windows_runner
+    - register_runner
+
 - name: install Gitlab runner on linux
   include_tasks: linux.yml
   when: ansible_os_family != 'Windows'

@@ -1,0 +1,43 @@
+---
+
+- name: create required directories
+  win_file:
+    path: C:\{{ item }}
+    state: directory
+  loop:
+    - gitlab-runner
+    - gitlab-runner\cache
+    - gitlab-runner\build
+
+- name: Get runner executable file
+  win_get_url:
+    # yamllint disable-line rule:line-length
+    url: "https://gitlab-runner-downloads.s3.amazonaws.com/latest/binaries/gitlab-runner-windows-amd64.exe"
+    dest: C:\gitlab-runner\gitlab-runner-staging.exe
+  register: runner_install
+  check_mode: false
+  ignore_errors: true  # ExitJson with 0 arguments
+
+- name: Run runner install
+  include_tasks: tasks-Windows.yml
+  when: runner_install.changed
+
+- name: Check if gitlab-runner service is installed
+  win_service:
+    name: gitlab-runner
+  register: service_info
+
+- name: Place runner config
+  win_template:
+    src: config.toml.j2
+    dest: C:\gitlab-runner\config.toml
+  notify: restart runner service
+
+- name: install runner service
+  win_command: gitlab-runner.exe install
+  args:
+    chdir: C:\gitlab-runner\
+  when: not service_info.exists
+
+- name: Run all notified handlers now
+  meta: flush_handlers
