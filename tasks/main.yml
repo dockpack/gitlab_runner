@@ -27,8 +27,7 @@
 - name: Set gitlab_runner_token
   when:
     - gitlab_runner_token is not defined
-    - runners_registration_token is defined
-    - runners_registration_token.rc == 0
+    - runners_registration_token.stdout is defined
   set_fact:
     gitlab_runner_token: "{{ runners_registration_token.stdout }}"
   tags:
