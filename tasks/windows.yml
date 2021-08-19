@@ -44,6 +44,14 @@
     - windows_runner
     - register_runner
 
+- name: Place powershell script
+  win_template:
+    src: register.ps1
+    dest: C:\gitlab-runner\register.ps1
+  tags:
+    - windows_runner
+    - register_runner
+
 - name: Install runner service
   when: not service_info.exists
   win_command: gitlab-runner.exe install
@@ -58,18 +66,25 @@
   tags:
     - windows_runner
 
-- name: Register runner
-  win_shell: |
-    C:\gitlab-runner\gitlab-runner.exe register --non-interactive `
-    --url {{ gitlab_external_url }} `
-    --registration-token {{ gitlab_runner_token }} `
-    --description "windows-runner" `
-    --tag-list "windows,win32,win64" `
-    --locked="false" `
-    --executor shell
-  args:
-    chdir: C:\gitlab-runner\
-  ignore_errors: true
-  tags:
-    - register_runner
-    - windows_runner
+- name: Create task to run a PS script as SYSTEM service on boot
+  win_scheduled_task:
+    name: Register
+    description: Register Gitlab Runner
+    actions:
+      - path: C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe
+        arguments: -ExecutionPolicy Unrestricted -NonInteractive -File C:\gitlab-runner\register.ps1
+    triggers:
+      - type: boot
+    username: SYSTEM
+    run_level: highest
+    state: present
+
+#- name: Register runner
+#  win_shell: |
+#    C:\gitlab-runner\register.ps1
+#  args:
+#    chdir: C:\gitlab-runner\
+#  ignore_errors: true
+#  tags:
+#    - register_runner
+#    - windows_runner
