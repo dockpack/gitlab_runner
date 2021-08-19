@@ -66,6 +66,7 @@
   tags:
     - windows_runner
 
+# yamllint disable rule:line-length
 - name: Create task to run a PS script as SYSTEM service on boot
   win_scheduled_task:
     name: Register
@@ -79,12 +80,12 @@
     run_level: highest
     state: present
 
-#- name: Register runner
-#  win_shell: |
-#    C:\gitlab-runner\register.ps1
-#  args:
-#    chdir: C:\gitlab-runner\
-#  ignore_errors: true
-#  tags:
-#    - register_runner
-#    - windows_runner
+# - name: Register runner
+#   win_shell: |
+#     C:\gitlab-runner\register.ps1
+#   args:
+#     chdir: C:\gitlab-runner\
+#   ignore_errors: true
+#   tags:
+#     - register_runner
+#     - windows_runner
