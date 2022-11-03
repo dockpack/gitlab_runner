@@ -1,4 +1,8 @@
+{% if gitlab_concurrent <= 0 %}
 concurrent =  {{ ansible_processor_cores|default(2, true) }}
+{% else %}
+concurrent =  {{ gitlab_concurrent }}
+{% endif %}
 check_interval = 0
 
 [session_server]
