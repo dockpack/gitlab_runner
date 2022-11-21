@@ -7,14 +7,14 @@
     update_cache: true
 
 - name: Run RedHat specific tasks
-  include: tasks-RedHat.yml
+  include_tasks: tasks-RedHat.yml
   when: ansible_os_family == 'RedHat'
   tags:
     - gitlab_runner
     - redhat
 
 - name: Run Debian specific tasks
-  include: tasks-Debian.yml
+  include_tasks: tasks-Debian.yml
   when: ansible_os_family == 'Debian'
   tags:
     - gitlab_runner
@@ -33,7 +33,7 @@
   lineinfile:
     dest: /etc/gitlab-runner/config.toml
     regexp: ^concurrent =
-    line: concurrent = {{ ansible_processor_cores|default(2, true) }}
+    line: concurrent = {{ ansible_processor_cores | default(2, true) }}
     state: present
     mode: 0644
 
