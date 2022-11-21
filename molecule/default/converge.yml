@@ -3,6 +3,9 @@
   hosts: all
   become: true
   vars:
+    role_name: "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') | basename }}"
     gitlab_transport: 'http'
-  roles:
-    - role: gitlab_runner
+  tasks:
+    - name: "Include {{ role_name }}"
+      ansible.builtin.include_role:
+        name: "{{ role_name }}"
